@@ -10,7 +10,7 @@ function Item(props){
                 alt="Delete"
                 onClick={()=>props.deleteItem(props.id)}
             />
-            <TextItem text={props.text}/>
+            <TextItem timeUpdate={props.timeUpdate} task={props.task}/>
         </div>
     );
 }

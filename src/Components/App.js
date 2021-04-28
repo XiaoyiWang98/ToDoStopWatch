@@ -1,27 +1,78 @@
+import Cookies from 'js-cookie';
 import { useState } from 'react';
 import '../styles/App.css';
 import Item from './Item';
 import './TaskItem'
 function App(){
 
-  const [tasks, setTasks] = useState([]);
+  // get cookie
+  const cookie = Cookies.get();
 
-  function deleteItem(id){
-    setTasks(prevTasks => prevTasks.filter((tasks, index) => index !== id));
+  // operation for the title;
+  let lastTitle = cookie["title"];
+
+  if(lastTitle === undefined){
+    lastTitle = "Todo StopWatch";
+    Cookies.set("title", lastTitle);
   }
 
-  function add(){
-    let task = prompt("Please enter the name of your task");
+  const [title, setTitle] = useState(lastTitle);
 
-    if(task != null && task !== ""){
-      setTasks(prevTasks=>[...prevTasks, task]);
+  function changeTitle(){
+    let name = prompt("Please enter the name of your list:");
+    if(name != null && name !== ""){
+      Cookies.set("title", name);
+      setTitle(name);
     }
+  }
+
+  // operations for the tasks-list
+  let lastTasks = cookie["tasks"];
+  if(lastTasks === undefined){
+    lastTasks = "[]";
+  }
+
+  let TasksObj = JSON.parse(lastTasks);
+
+  const [tasks, setTasks] = useState(TasksObj);
+
+  function add(){
+    const taskName = prompt("Please enter the name of your task");
+    if(taskName != null && taskName !== ""){
+
+      const task = {"name": taskName, "offset": 0};
+      setTasks(prevTasks=>{
+        const list = [...prevTasks, task];
+        Cookies.set("tasks", JSON.stringify(list));
+        return list;
+      });
+    }
+  }
+
+  function timeUpdate(task, hours, minutes, seconds){
+    setTasks(prevTasks => {
+      prevTasks.forEach(element => {
+        if(element === task){
+          element["offset"] = 3600*hours+60*minutes+seconds;
+        }
+      }, prevTasks);
+      Cookies.set("tasks", JSON.stringify(prevTasks));
+      return prevTasks;
+    })
+  }
+
+  function deleteItem(id){
+    setTasks(prevTasks => { 
+      const list = prevTasks.filter((tasks, index) => index !== id);
+      Cookies.set("tasks", JSON.stringify(list));
+      return list;
+    });
   }
 
   return (
     <div className="App">
-      <h1 contentEditable="true">ToDo StopWatch</h1>
-      {tasks.map((task, id) => <Item deleteItem = {deleteItem} id={id} text={task}/>)}
+      <h1 onClick={changeTitle}>{title}</h1>
+      {tasks.map((task, id) => <Item key = {id} timeUpdate={timeUpdate} deleteItem = {deleteItem} id={id} task={task}/>)}
       <img
         className="add"
         onClick={add}

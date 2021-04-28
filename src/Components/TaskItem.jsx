@@ -3,6 +3,9 @@ import "../styles/TaskItem.css"
 import { useStopwatch } from 'react-timer-hook';
 function TaskItem(props){
 
+    const stopwatchOffset = new Date(); 
+    stopwatchOffset.setSeconds(stopwatchOffset.getSeconds() + props.task["offset"]);
+
     const {
         seconds,
         minutes,
@@ -10,12 +13,13 @@ function TaskItem(props){
         isRunning,
         start,
         pause,
-    } = useStopwatch({ autoStart: false });
+    } = useStopwatch({ autoStart: false, offsetTimestamp: stopwatchOffset});
 
     function click(){
         if(isRunning === false){
             start();
         }else{
+            props.timeUpdate(props.task, hours, minutes, seconds);
             pause();
         }
     }
@@ -31,7 +35,7 @@ function TaskItem(props){
     return(
         <div className="watch" onClick={click} style={isRunning?{backgroundColor: "#6ddccf"}:{backgroundColor:"#ffcb91"}}>
             <div className="textDisplay">
-                {props.text}
+                {props.task["name"]}
             </div>
             <div className="timeDisplay">
                 {formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}
