@@ -8,3 +8,8 @@ B站：https://www.bilibili.com/video/BV17Z4y1A7hn/
 GitHub: https://github.com/XiaoyiWang98/ToDoStopWatch
 
 成品展示: https://main.d2vxocts7smvd8.amplifyapp.com/
+
+## v2.0
+这个月的懵逼项目，我们修一下Nathan同学提出的一个bug。视频记录了修Bug的全过程，如果有人对前端开发及Github操作感兴趣或者单纯对编程感兴趣都可以去看看。
+Youtube：https://youtu.be/WARMBbGA4ic
+哔哩哔哩：https://www.bilibili.com/video/BV1cf4y1W76Z
